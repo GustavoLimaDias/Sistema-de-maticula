@@ -79,4 +79,3 @@ Uma universidade quer informatizar seu sistema de matrículas. A secretaria acad
 
 - **US14** — Como sistema, quero notificar o sistema de cobrança sempre que uma matrícula for concluída, para garantir que o aluno seja cobrado corretamente (RN05).
 - **US15** — Como sistema, quero encerrar automaticamente as inscrições de uma disciplina ao atingir 60 alunos, para respeitar o limite de vagas (RN04).
-
