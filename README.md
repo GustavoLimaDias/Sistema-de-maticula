@@ -1,5 +1,92 @@
 # Sistema de Matrículas
 
+Projeto acadêmico da disciplina Projeto de Software, do curso de Engenharia de Software da PUC Minas.
+
+O sistema modela o processo de matrícula de uma universidade, incluindo alunos,
+professores, secretaria acadêmica, disciplinas, cursos e período de matrícula.
+
+## Funcionalidades
+
+- Autenticação de alunos, professores e secretaria.
+- Cadastro de cursos, disciplinas, alunos e professores.
+- Matrícula em até 4 disciplinas obrigatórias e 2 optativas.
+- Cancelamento de matrícula durante o período vigente.
+- Controle de 60 vagas por disciplina.
+- Ativação de disciplinas com pelo menos 3 alunos inscritos.
+- Cancelamento automático de disciplinas abaixo do número mínimo de inscritos.
+- Notificação do sistema externo de cobrança após uma matrícula.
+
+## Regras de negócio
+
+| Código | Regra |
+| --- | --- |
+| RN01 | Cada aluno pode se matricular em até 4 disciplinas obrigatórias e 2 optativas. |
+| RN02 | Matrículas e cancelamentos só podem ocorrer durante o período vigente. |
+| RN03 | Uma disciplina precisa de pelo menos 3 alunos para ser ativada no semestre seguinte. |
+| RN04 | Cada disciplina possui no máximo 60 vagas. |
+| RN05 | Toda matrícula concluída deve ser enviada ao sistema de cobrança. |
+| RN06 | Usuários acessam o sistema com login e senha. |
+
+## Diagramas
+
+### Casos de uso
+
+![Diagrama de casos de uso](docs/diagrama-caso-de-uso.svg)
+
+### Classes
+
+![Diagrama de classes](docs/diagrama-classes.svg)
+
+## Estrutura do projeto
+
+```text
+.
+├── docs/
+│   ├── diagrama-caso-de-uso.svg
+│   └── diagrama-classes.svg
+├── projeto-java/
+│   ├── pom.xml
+│   └── src/
+│       ├── main/java/br/pucminas/matriculas/
+│       │   ├── App.java
+│       │   ├── model/
+│       │   └── servico/
+│       └── test/java/br/pucminas/matriculas/
+└── README.md
+```
+
+O projeto Java usa Maven e Java 17. A camada de domínio está organizada em:
+
+- `model`: entidades, regras de negócio e enums.
+- `servico`: contratos de integração, como o serviço de cobrança.
+- `test`: testes automatizados das regras principais.
+
+## Como executar
+
+No terminal, a partir da raiz do repositório:
+
+```powershell
+cd projeto-java
+mvn clean test
+java -cp target/classes br.pucminas.matriculas.App
+```
+
+O comando `mvn clean test` compila o projeto e executa os testes. O ponto de entrada
+atual apresenta o sistema no terminal; a interface interativa e a persistência em
+arquivo ficam previstas para uma próxima etapa do projeto.
+
+## Testes
+
+Para executar apenas os testes:
+
+```powershell
+cd projeto-java
+mvn test
+```
+
+A suíte atual verifica autenticação, limites de matrícula, cancelamento, notificação
+de cobrança e encerramento do período.# Sistema de Matrículas
+
 Projeto da disciplina **Projeto de Software** (PUC Minas — Curso de Engenharia de Software), Laboratório 1. Este README acumula as entregas de cada sprint.
 
 ## Sumário
