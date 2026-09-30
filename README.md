@@ -116,7 +116,7 @@ O protótipo Java segue a estrutura padrão de um projeto Maven e separa as enti
 
 ### Requisitos
 
-- Java 17 ou superior
+- Java 25 ou superior
 - Maven 3.9 ou superior
 
 ### Compilar e testar

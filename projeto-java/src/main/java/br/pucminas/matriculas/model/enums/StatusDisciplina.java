@@ -8,6 +8,8 @@ public enum StatusDisciplina {
     EM_OFERTA,
     /** Atingiu o mínimo de 3 inscritos ao final do período e ocorrerá no semestre seguinte. */
     ATIVA,
+    /** Atingiu a capacidade maxima durante o periodo de inscricoes. */
+    LOTADA,
     /** Não atingiu o mínimo de 3 inscritos e foi cancelada. */
     CANCELADA
 }

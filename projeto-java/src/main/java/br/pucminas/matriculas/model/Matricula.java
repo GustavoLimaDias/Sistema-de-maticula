@@ -18,12 +18,18 @@ public class Matricula {
     private TipoDisciplina tipo;
     private LocalDate dataMatricula;
     private StatusMatricula status;
+    private PeriodoMatricula periodo;
 
-    public Matricula(Aluno aluno, Disciplina disciplina, TipoDisciplina tipo, LocalDate dataMatricula) {
+    public Matricula(Aluno aluno, Disciplina disciplina, TipoDisciplina tipo, LocalDate dataMatricula,
+            PeriodoMatricula periodo) {
+        if (aluno == null || disciplina == null || tipo == null || dataMatricula == null || periodo == null) {
+            throw new IllegalArgumentException("Aluno, disciplina, tipo, data e periodo sao obrigatorios");
+        }
         this.aluno = aluno;
         this.disciplina = disciplina;
         this.tipo = tipo;
         this.dataMatricula = dataMatricula;
+        this.periodo = periodo;
         this.status = StatusMatricula.ATIVA;
     }
 
@@ -52,6 +58,10 @@ public class Matricula {
 
     public StatusMatricula getStatus() {
         return status;
+    }
+
+    public PeriodoMatricula getPeriodo() {
+        return periodo;
     }
 
     public void setStatus(StatusMatricula status) {

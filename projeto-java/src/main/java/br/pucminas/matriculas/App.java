@@ -2,12 +2,17 @@ package br.pucminas.matriculas;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import br.pucminas.matriculas.model.Aluno;
 import br.pucminas.matriculas.model.Disciplina;
 import br.pucminas.matriculas.model.Matricula;
 import br.pucminas.matriculas.model.PeriodoMatricula;
+import br.pucminas.matriculas.model.Professor;
+import br.pucminas.matriculas.model.Secretaria;
+import br.pucminas.matriculas.model.Usuario;
 import br.pucminas.matriculas.model.enums.StatusMatricula;
 import br.pucminas.matriculas.model.enums.TipoDisciplina;
 import br.pucminas.matriculas.servico.ServicoCobranca;
@@ -15,24 +20,35 @@ import br.pucminas.matriculas.servico.ServicoCobranca;
 public class App {
 
     public static void main(String[] args) {
-        PeriodoMatricula periodo = criarPeriodoDemonstracao();
         Aluno aluno = new Aluno("1", "Ana Silva", "ana", "123", "RA001");
+        Professor professor = new Professor("2", "Carlos Souza", "carlos", "123", "RF001");
+        Secretaria secretaria = new Secretaria("3", "Secretaria", "secretaria", "123");
+        PeriodoMatricula periodo = criarPeriodoDemonstracao(secretaria);
+        Disciplina primeiraDisciplina = periodo.getDisciplinasOfertadas().get(0);
+        professor.adicionarDisciplina(primeiraDisciplina);
+        secretaria.cadastrarAluno(aluno);
+        secretaria.cadastrarProfessor(professor);
         ServicoCobranca cobranca = matricula -> System.out.println("Cobrança notificada para "
                 + matricula.getAluno().getNome() + " - " + matricula.getDisciplina().getNome());
+        Map<String, Usuario> usuarios = Map.of(
+                aluno.getLogin(), aluno,
+                professor.getLogin(), professor,
+                secretaria.getLogin(), secretaria);
 
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.println("=== Sistema de Matrículas ===");
-            System.out.println("Entre com o usuário de demonstração: ana / 123");
-            if (!autenticar(scanner, aluno)) {
+            System.out.println("Usuários de demonstração: ana / 123, carlos / 123, secretaria / 123");
+            Usuario usuario = autenticar(scanner, usuarios);
+            if (usuario == null) {
                 System.out.println("Login ou senha inválidos.");
                 return;
             }
-            executarMenu(scanner, aluno, periodo, cobranca);
+            executarMenu(scanner, usuario, periodo, cobranca);
         }
     }
 
-    private static PeriodoMatricula criarPeriodoDemonstracao() {
-        PeriodoMatricula periodo = new PeriodoMatricula("2026.2",
+    private static PeriodoMatricula criarPeriodoDemonstracao(Secretaria secretaria) {
+        PeriodoMatricula periodo = secretaria.definirPeriodo("2026.2",
                 LocalDate.now().minusDays(1), LocalDate.now().plusDays(30));
         periodo.adicionarDisciplina(new Disciplina("COMP101", "Algoritmos"));
         periodo.adicionarDisciplina(new Disciplina("COMP102", "Banco de Dados"));
@@ -43,15 +59,27 @@ public class App {
         return periodo;
     }
 
-    private static boolean autenticar(Scanner scanner, Aluno aluno) {
+    private static Usuario autenticar(Scanner scanner, Map<String, Usuario> usuarios) {
         System.out.print("Login: ");
         String login = scanner.nextLine();
         System.out.print("Senha: ");
         String senha = scanner.nextLine();
-        return aluno.getLogin().equals(login) && aluno.autenticar(senha);
+        Usuario usuario = usuarios.get(login);
+        return usuario != null && usuario.autenticar(login, senha) ? usuario : null;
     }
 
-    private static void executarMenu(Scanner scanner, Aluno aluno, PeriodoMatricula periodo,
+    private static void executarMenu(Scanner scanner, Usuario usuario, PeriodoMatricula periodo,
+            ServicoCobranca cobranca) {
+        if (usuario instanceof Aluno aluno) {
+            executarMenuAluno(scanner, aluno, periodo, cobranca);
+        } else if (usuario instanceof Professor professor) {
+            executarMenuProfessor(scanner, professor);
+        } else if (usuario instanceof Secretaria secretaria) {
+            executarMenuSecretaria(scanner, secretaria, periodo);
+        }
+    }
+
+    private static void executarMenuAluno(Scanner scanner, Aluno aluno, PeriodoMatricula periodo,
             ServicoCobranca cobranca) {
         while (true) {
             System.out.println("\n--- Menu principal ---");
@@ -74,6 +102,59 @@ public class App {
                 }
                 case "0" -> {
                     System.out.println("Até logo.");
+                    return;
+                }
+                default -> System.out.println("Opção inválida.");
+            }
+        }
+    }
+
+    private static void executarMenuProfessor(Scanner scanner, Professor professor) {
+        while (true) {
+            System.out.println("\n--- Menu do professor ---");
+            System.out.println("1 - Consultar alunos matriculados");
+            System.out.println("0 - Sair");
+            System.out.print("Opção: ");
+            String opcao = scanner.nextLine();
+            if ("0".equals(opcao)) return;
+            if (!"1".equals(opcao)) {
+                System.out.println("Opção inválida.");
+                continue;
+            }
+            for (int indice = 0; indice < professor.getDisciplinas().size(); indice++) {
+                Disciplina disciplina = professor.getDisciplinas().get(indice);
+                System.out.printf("%d - %s (%s)%n", indice + 1, disciplina.getNome(), disciplina.getCodigo());
+            }
+            int indice = lerIndice(scanner, professor.getDisciplinas().size());
+            if (indice >= 0) {
+                List<Aluno> alunos = professor.consultarAlunosMatriculados(
+                        professor.getDisciplinas().get(indice));
+                if (alunos.isEmpty()) {
+                    System.out.println("Nenhum aluno matriculado.");
+                } else {
+                    alunos.forEach(aluno -> System.out.println("- " + aluno.getNome()));
+                }
+            }
+        }
+    }
+
+    private static void executarMenuSecretaria(Scanner scanner, Secretaria secretaria,
+            PeriodoMatricula periodo) {
+        while (true) {
+            System.out.println("\n--- Menu da secretaria ---");
+            System.out.println("1 - Consultar cadastros");
+            System.out.println("2 - Encerrar período");
+            System.out.println("0 - Sair");
+            System.out.print("Opção: ");
+            switch (scanner.nextLine()) {
+                case "1" -> System.out.printf("Alunos: %d | Professores: %d | Períodos: %d%n",
+                        secretaria.getAlunos().size(), secretaria.getProfessores().size(),
+                        secretaria.getPeriodos().size());
+                case "2" -> {
+                    secretaria.processarEncerramento(periodo);
+                    System.out.println("Período encerrado e disciplinas avaliadas.");
+                }
+                case "0" -> {
                     return;
                 }
                 default -> System.out.println("Opção inválida.");

@@ -53,7 +53,17 @@ public class Disciplina {
         if (matriculas.stream()
                 .filter(matricula -> matricula.getStatus() == br.pucminas.matriculas.model.enums.StatusMatricula.ATIVA)
                 .count() >= capacidadeMaxima) {
-            status = StatusDisciplina.ATIVA;
+            status = StatusDisciplina.LOTADA;
+        }
+    }
+
+    void adicionarMatricula(Matricula matricula) {
+        matriculas.add(matricula);
+    }
+
+    void atualizarStatusAposCancelamento() {
+        if (status == StatusDisciplina.LOTADA && possuiVagas()) {
+            status = StatusDisciplina.EM_OFERTA;
         }
     }
 
@@ -82,6 +92,6 @@ public class Disciplina {
     }
 
     public List<Matricula> getMatriculas() {
-        return matriculas;
+        return java.util.Collections.unmodifiableList(matriculas);
     }
 }

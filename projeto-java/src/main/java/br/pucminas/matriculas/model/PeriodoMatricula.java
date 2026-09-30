@@ -19,6 +19,10 @@ public class PeriodoMatricula {
     private List<Disciplina> disciplinasOfertadas = new ArrayList<>();
 
     public PeriodoMatricula(String semestre, LocalDate dataInicio, LocalDate dataFim) {
+        if (semestre == null || semestre.isBlank() || dataInicio == null || dataFim == null
+                || dataFim.isBefore(dataInicio)) {
+            throw new IllegalArgumentException("Semestre e datas validos sao obrigatorios");
+        }
         this.semestre = semestre;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
@@ -72,6 +76,6 @@ public class PeriodoMatricula {
     }
 
     public List<Disciplina> getDisciplinasOfertadas() {
-        return disciplinasOfertadas;
+        return java.util.Collections.unmodifiableList(disciplinasOfertadas);
     }
 }

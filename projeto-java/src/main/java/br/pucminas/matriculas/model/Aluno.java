@@ -3,6 +3,7 @@ package br.pucminas.matriculas.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
+import java.util.Collections;
 
 import br.pucminas.matriculas.model.enums.TipoDisciplina;
 
@@ -26,42 +27,35 @@ public class Aluno extends Usuario {
      * RN02 (período aberto) e RN04 (disciplina não pode estar lotada).
      * Ao concluir, deve incluir "Notificar Sistema de Cobrança".
      */
-    public Matricula matricularEm(Disciplina disciplina, TipoDisciplina tipo) {
-        validarMatricula(disciplina, tipo);
-        Matricula matricula = new Matricula(this, disciplina, tipo, LocalDate.now());
-        matriculas.add(matricula);
-        disciplina.getMatriculas().add(matricula);
-        disciplina.encerrarPorLotacao();
-        return matricula;
-    }
-
     public Matricula matricularEm(Disciplina disciplina, TipoDisciplina tipo,
             PeriodoMatricula periodo, br.pucminas.matriculas.servico.ServicoCobranca servicoCobranca) {
         if (periodo == null || !periodo.estaAberto() || !periodo.getDisciplinasOfertadas().contains(disciplina)) {
             throw new IllegalStateException("Periodo de matriculas fechado ou disciplina nao ofertada");
         }
-        Matricula matricula = matricularEm(disciplina, tipo);
-        if (servicoCobranca != null) {
-            servicoCobranca.notificarMatricula(matricula);
+        if (servicoCobranca == null) {
+            throw new IllegalArgumentException("Servico de cobranca obrigatorio");
         }
+        validarMatricula(disciplina, tipo);
+        Matricula matricula = new Matricula(this, disciplina, tipo, LocalDate.now(), periodo);
+        matriculas.add(matricula);
+        disciplina.adicionarMatricula(matricula);
+        disciplina.encerrarPorLotacao();
+        servicoCobranca.notificarMatricula(matricula);
         return matricula;
     }
 
     /**
      * Caso de uso "Cancelar Matrícula" (somente dentro do período de matrículas vigente - RN02).
      */
-    public void cancelarMatricula(Matricula matricula) {
+    public void cancelarMatricula(Matricula matricula, PeriodoMatricula periodo) {
         if (matricula == null || matricula.getAluno() != this || !matriculas.contains(matricula)) {
             throw new IllegalArgumentException("Matricula nao pertence ao aluno");
         }
-        matricula.cancelar();
-    }
-
-    public void cancelarMatricula(Matricula matricula, PeriodoMatricula periodo) {
-        if (periodo == null || !periodo.estaAberto()) {
-            throw new IllegalStateException("Periodo de matriculas fechado");
+        if (periodo == null || !periodo.estaAberto() || matricula.getPeriodo() != periodo) {
+            throw new IllegalStateException("Periodo de matriculas fechado ou invalido");
         }
-        cancelarMatricula(matricula);
+        matricula.cancelar();
+        matricula.getDisciplina().atualizarStatusAposCancelamento();
     }
 
     /**
@@ -98,6 +92,6 @@ public class Aluno extends Usuario {
     }
 
     public List<Matricula> getMatriculas() {
-        return matriculas;
+        return Collections.unmodifiableList(matriculas);
     }
 }

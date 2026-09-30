@@ -2,6 +2,7 @@ package br.pucminas.matriculas.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 /**
  * Ator "Secretaria Acadêmica": monta o currículo do semestre, cadastra cursos, disciplinas,
@@ -13,6 +14,7 @@ public class Secretaria extends Usuario {
     private final List<Disciplina> disciplinas = new ArrayList<>();
     private final List<Professor> professores = new ArrayList<>();
     private final List<Aluno> alunos = new ArrayList<>();
+    private final List<PeriodoMatricula> periodos = new ArrayList<>();
 
     public Secretaria(String id, String nome, String login, String senha) {
         super(id, nome, login, senha);
@@ -47,5 +49,31 @@ public class Secretaria extends Usuario {
     public void processarEncerramento(PeriodoMatricula periodo) {
         if (periodo == null) throw new IllegalArgumentException("Periodo obrigatorio");
         periodo.encerrar();
+    }
+
+    public PeriodoMatricula definirPeriodo(String semestre, LocalDate dataInicio, LocalDate dataFim) {
+        PeriodoMatricula periodo = new PeriodoMatricula(semestre, dataInicio, dataFim);
+        periodos.add(periodo);
+        return periodo;
+    }
+
+    public List<PeriodoMatricula> getPeriodos() {
+        return java.util.Collections.unmodifiableList(periodos);
+    }
+
+    public List<Curso> getCursos() {
+        return java.util.Collections.unmodifiableList(cursos);
+    }
+
+    public List<Disciplina> getDisciplinas() {
+        return java.util.Collections.unmodifiableList(disciplinas);
+    }
+
+    public List<Professor> getProfessores() {
+        return java.util.Collections.unmodifiableList(professores);
+    }
+
+    public List<Aluno> getAlunos() {
+        return java.util.Collections.unmodifiableList(alunos);
     }
 }

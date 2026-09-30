@@ -27,6 +27,10 @@ public abstract class Usuario {
         return Objects.equals(this.senha, senha);
     }
 
+    public boolean autenticar(String login, String senha) {
+        return Objects.equals(this.login, login) && autenticar(senha);
+    }
+
     public String getId() {
         return id;
     }
