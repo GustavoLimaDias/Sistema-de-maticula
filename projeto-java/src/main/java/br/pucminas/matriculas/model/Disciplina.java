@@ -62,7 +62,10 @@ public class Disciplina {
     }
 
     void atualizarStatusAposCancelamento() {
-        if (status == StatusDisciplina.LOTADA && possuiVagas()) {
+        long matriculasAtivas = matriculas.stream()
+                .filter(matricula -> matricula.getStatus() == br.pucminas.matriculas.model.enums.StatusMatricula.ATIVA)
+                .count();
+        if (status == StatusDisciplina.LOTADA && matriculasAtivas < capacidadeMaxima) {
             status = StatusDisciplina.EM_OFERTA;
         }
     }

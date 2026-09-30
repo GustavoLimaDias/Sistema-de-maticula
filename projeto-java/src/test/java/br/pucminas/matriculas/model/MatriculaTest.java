@@ -1,12 +1,11 @@
 package br.pucminas.matriculas.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import br.pucminas.matriculas.model.enums.StatusDisciplina;
@@ -140,6 +139,23 @@ class MatriculaTest {
             TipoDisciplina.OBRIGATORIA, periodo, matricula -> {
             }));
         }
+
+    @Test
+    void reabreVagaQuandoMatriculaDaDisciplinaLotadaECancelada() {
+        PeriodoMatricula periodo = periodoAberto();
+        Disciplina disciplina = new Disciplina("D1", "Algoritmos");
+        periodo.adicionarDisciplina(disciplina);
+        Aluno ultimoAluno = null;
+        for (int indice = 0; indice < 60; indice++) {
+            ultimoAluno = aluno(String.valueOf(indice));
+            ultimoAluno.matricularEm(disciplina, TipoDisciplina.OBRIGATORIA, periodo, matricula -> {
+            });
+        }
+
+        ultimoAluno.cancelarMatricula(ultimoAluno.getMatriculas().get(0), periodo);
+
+        assertEquals(StatusDisciplina.EM_OFERTA, disciplina.getStatus());
+    }
 
         @Test
         void professorConsultaApenasDisciplinaQueLeciona() {

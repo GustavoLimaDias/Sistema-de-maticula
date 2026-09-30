@@ -12,12 +12,12 @@
   <name>Sistema de Matriculas</name>
   <description>
     Projeto de Software - PUC Minas - Laboratorio 1 (Sistema de Matriculas).
-    Sprint 2: estrutura de classes do dominio (atributos + stubs dos metodos modelados).
+    Prototipo funcional do dominio e dos fluxos principais do sistema.
   </description>
 
   <properties>
-    <maven.compiler.source>25</maven.compiler.source>
-    <maven.compiler.target>25</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 

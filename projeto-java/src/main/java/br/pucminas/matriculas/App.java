@@ -3,7 +3,6 @@ package br.pucminas.matriculas;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Scanner;
 
 import br.pucminas.matriculas.model.Aluno;

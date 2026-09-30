@@ -1,9 +1,9 @@
 package br.pucminas.matriculas.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import br.pucminas.matriculas.model.enums.TipoDisciplina;
 

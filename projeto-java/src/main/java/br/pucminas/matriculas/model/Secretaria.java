@@ -1,8 +1,8 @@
 package br.pucminas.matriculas.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate;
 
 /**
  * Ator "Secretaria Acadêmica": monta o currículo do semestre, cadastra cursos, disciplinas,

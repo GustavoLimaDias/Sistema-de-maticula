@@ -154,18 +154,26 @@ Login: ana
 Senha: 123
 ```
 
-O sistema inicia com seis disciplinas de demonstração no período `2026.2`.
+O sistema inicia com seis disciplinas de demonstração no período `2026.2`. Há três usuários de demonstração:
+
+```text
+Aluno:      ana / 123
+Professor:  carlos / 123
+Secretaria: secretaria / 123
+```
 
 ## Testes
 
 Os testes automatizados estão em `projeto-java/src/test` e verificam:
 
-- autenticação com senha correta e incorreta;
-- limite de quatro disciplinas obrigatórias;
+- autenticação com login e senha correta e incorreta;
+- limite de quatro disciplinas obrigatórias e duas optativas;
 - notificação do sistema de cobrança;
 - cancelamento de matrícula;
 - ativação de disciplina com três ou mais inscritos;
-- encerramento do período.
+- encerramento do período;
+- bloqueio fora do período e ao atingir 60 vagas;
+- autorização do professor e definição de período pela secretaria.
 
 Execute a suíte com:
 
@@ -194,4 +202,4 @@ Sistema-de-maticula/
 
 ## Estado do projeto
 
-O domínio e o menu de demonstração estão implementados e testados. O protótipo utiliza dados carregados em memória ao iniciar; persistência em arquivo e uma interface gráfica não fazem parte desta versão.
+O domínio e o menu de demonstração estão implementados e testados. O protótipo utiliza dados carregados em memória ao iniciar; persistência em arquivo, integração HTTP real com cobrança e uma interface gráfica não fazem parte desta versão. Os cadastros de secretaria estão disponíveis pela API de domínio e o menu permite consultar os cadastros e encerrar o período.
