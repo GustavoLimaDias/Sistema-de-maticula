@@ -36,6 +36,6 @@ public class Curso {
     }
 
     public List<Disciplina> getDisciplinas() {
-        return disciplinas;
+        return java.util.Collections.unmodifiableList(disciplinas);
     }
 }

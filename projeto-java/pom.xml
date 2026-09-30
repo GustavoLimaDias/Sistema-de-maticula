@@ -12,7 +12,7 @@
   <name>Sistema de Matriculas</name>
   <description>
     Projeto de Software - PUC Minas - Laboratorio 1 (Sistema de Matriculas).
-    Sprint 2: estrutura de classes do dominio (atributos + stubs dos metodos modelados).
+    Prototipo funcional do dominio e dos fluxos principais do sistema.
   </description>
 
   <properties>

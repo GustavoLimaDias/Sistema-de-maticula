@@ -23,6 +23,9 @@ public class Professor extends Usuario {
         if (disciplina == null) {
             throw new IllegalArgumentException("Disciplina obrigatoria");
         }
+        if (!disciplinas.contains(disciplina)) {
+            throw new IllegalStateException("Professor nao leciona essa disciplina");
+        }
         return disciplina.getMatriculas().stream()
                 .filter(matricula -> matricula.getStatus() == br.pucminas.matriculas.model.enums.StatusMatricula.ATIVA)
                 .map(Matricula::getAluno)
@@ -41,6 +44,6 @@ public class Professor extends Usuario {
     }
 
     public List<Disciplina> getDisciplinas() {
-        return disciplinas;
+        return java.util.Collections.unmodifiableList(disciplinas);
     }
 }
