@@ -199,7 +199,3 @@ Sistema-de-maticula/
 │       └── test/java/br/pucminas/matriculas/
 └── README.md
 ```
-
-## Estado do projeto
-
-O domínio e o menu de demonstração estão implementados e testados. O protótipo utiliza dados carregados em memória ao iniciar; persistência em arquivo, integração HTTP real com cobrança e uma interface gráfica não fazem parte desta versão. Os cadastros de secretaria estão disponíveis pela API de domínio e o menu permite consultar os cadastros e encerrar o período.
